@@ -7,14 +7,16 @@ There are several software products within this code base:-
 
 - mutability-dump1090 - not included - download from https://github.com/mutability/dump1090 - provides the low level C code for running a Software Defined Radio. This is designed to be ran on a Raspberry Pi, but this version works well on a Mac
 - adsb-console - A standalone Java app, designed to be run on the receiver (Raspberry Pi or Laptop) that sends data to a remote RabbitMQ instance
-- adsb-live-processor - Spring Boot app that Listens to a RabbitMQ exchange for new aircraft positions, and updates a Live (60 second TTL) record in Redis per aircraft
-- aircraft-monitor - Spring Boot web app that provides a rest endpoint (/data/aircraft.json) which pulls data from Redis on request, and a web front end (/gmap.html) to show collated aircraft position information
+- adsb-live-processor - .NET and Spring Boot apps that Listens to a RabbitMQ exchange for new aircraft positions, and updates a Live (60 second TTL) record in Redis per aircraft
+- aircraft-monitor - .NET and Spring Boot web apps that provides a rest endpoint (/data/aircraft.json) which pulls data from Redis on request, and a web front end (/gmap.html) to show collated aircraft position information
+
+Note two of the apps above are provided with C#.NET and Java Spring Boot varieties to showcase the same patterns being ran with different application runtimes.
 
 ## How can I add my own data to the global view?
 
 Every Pivot can run their own receiver and contribute to the global map! If you're interested in this, follow the below steps
 
-First, contact Adam Fowler in the UK Platform Architect team <afowler@pivotal.io> for a key so you can send data to RabbitMQ.
+First, contact Adam Fowler in the UK Modern Apps SE team <adamf@vmware.com> for a key so you can send data to RabbitMQ.
 
 ### Buy a receiver
 
@@ -145,16 +147,11 @@ aircraftui|N/A|N/A|ReactJS (staticfile buildpack) new demo web UI
 
 ## License and Copyright
 
-All code and material is copyright Pivotal Inc all rights reserved, and licensed under the Apache 2 license unless
+All code and material is copyright VMware, Inc 2020-2021 all rights reserved, and licensed under the Apache 2 license unless
 otherwise stated.
 
 aircraft-monitor-java contains the web front end from mutability-dump1090 within its src/main/resources/static folder which is from the mutability version of the dump1090 application available at https://github.com/mutability/dump1090 and are licensed under the GPL V2 License. These files are copied verbatim and have not been modified, except the config.js file which is designed for user editable configuration.
 
 ## Support
 
-This app is provided as-is, without support. If you're using the internal pivotal demo app, then please email afowler@pivotal.io with all relevant information and I'll endeavour to give you pointers.
-
-## General TODOs
-
-- Get dotnet version working fully with externalised configuration for adsb-live-processor-dotnet using Steeltoe
-
+This app is provided as-is, without support. If you're using the internal pivotal demo app, then please email adamf@vmware.com with all relevant information and I'll endeavour to give you pointers.

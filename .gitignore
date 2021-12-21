@@ -269,3 +269,5 @@ __pycache__/
 
 adsb-console-java/target
 adsb-history-processor-java/target
+adsb-live-processor-java/target
+aircraft-monitor-java/target
