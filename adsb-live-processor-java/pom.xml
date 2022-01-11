@@ -68,6 +68,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>io.pivotal.pa.rabbitmq.adsbliveprocessor.ADSBLiveProcessorApplication</mainClass>
+				</configuration>
 				<!-- <configuration>
 					<skip>true</skip>
 				</configuration> -->
