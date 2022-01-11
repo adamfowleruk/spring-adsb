@@ -18,7 +18,7 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<spring-cloud.version>Greenwich.SR1</spring-cloud.version>
-		<start-class>io.pivotal.pa.rabbitmq.adsbliveprocessor.ADSBLiveProcessorApplication</start-class>
+		<!-- <start-class>io.pivotal.pa.rabbitmq.adsbliveprocessor.ADSBLiveProcessorApplication</start-class> -->
 	</properties>
 
 	<dependencies>
