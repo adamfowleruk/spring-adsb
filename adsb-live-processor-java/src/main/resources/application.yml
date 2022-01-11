@@ -6,11 +6,24 @@ spring:
         input:
           destination: adsb-fan-exchange
           group: adsbposition.live
+
+# From spring boot 2.3+, see: https://hackmd.io/@ryanjbaxter/spring-on-k8s-workshop#Handling-In-Flight-Requests
+server:
+  shutdown: graceful
+
 # Expose management API endpoints (for health checks)
+# Separating management actuator endpoints onto a non TLS port
+# See: https://docs.spring.io/spring-boot/docs/2.5.2/reference/html/actuator.html#actuator.monitoring.customizing-management-server-port
 management:
   security:
     enabled: false
-
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
 ---
 # K8S specific properties
 spring:
