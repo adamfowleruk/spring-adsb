@@ -1,0 +1,30 @@
+# General properties
+spring:
+  cloud:
+    stream:
+      bindings:
+        input:
+          destination: adsb-fan-exchange
+          group: adsbposition.live
+# Expose management API endpoints (for health checks)
+management:
+  security:
+    enabled: false
+
+---
+# K8S specific properties
+spring:
+  profiles: k8s-rabbit-redis
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    password: ${REDIS_PASSWORD}
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USER}
+    password: ${RABBITMQ_PASSWORD}
+
+# E.g. may add Kafka instead of RabbitMQ, or Gemfire instead of Redis as other profiles
+
+# Note for other values see https://docs.spring.io/spring-boot/docs/1.5.6.RELEASE/reference/html/common-application-properties.html
