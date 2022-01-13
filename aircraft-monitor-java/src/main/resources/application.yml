@@ -3,6 +3,7 @@ logging:
     org:
       springframework:
         web: INFO
+spring:
   jpa:
     properties:
       hibernate:
@@ -30,11 +31,16 @@ management:
 ---
 # K8S specific properties
 spring:
-  profiles: k8s-postgresql-redis
+  profiles: k8s
   redis:
     host: ${REDIS_HOST}
     port: ${REDIS_PORT}
     password: ${REDIS_PASSWORD}
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+    username: ${POSTGRES_USERNAME}
+    password: ${POSTGRES_PASSWORD}
 
 # TODO postgres link here
 
