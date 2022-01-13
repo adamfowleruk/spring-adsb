@@ -1,0 +1,52 @@
+# General properties
+spring:
+  cloud:
+    stream:
+      bindings:
+        input:
+          destination: adsb-fan-exchange
+          group: adsbposition.historical
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        ddl-auto: none
+        show-sql: true
+  datasource:
+    initialization-mode: always
+    initialize: true
+    continue-on-error: true
+
+# From spring boot 2.3+, see: https://hackmd.io/@ryanjbaxter/spring-on-k8s-workshop#Handling-In-Flight-Requests
+server:
+  shutdown: graceful
+
+# Expose management API endpoints (for health checks)
+# Separating management actuator endpoints onto a non TLS port
+# See: https://docs.spring.io/spring-boot/docs/2.5.2/reference/html/actuator.html#actuator.monitoring.customizing-management-server-port
+management:
+  security:
+    enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+---
+# K8S specific properties
+spring:
+  profiles: k8s-rabbit-postgresql
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USER}
+    password: ${RABBITMQ_PASSWORD}
+
+# TODO add postgres connection links here
+
+# E.g. may add Kafka instead of RabbitMQ, or Gemfire instead of Redis as other profiles
+
+# Note for other values see https://docs.spring.io/spring-boot/docs/1.5.6.RELEASE/reference/html/common-application-properties.html

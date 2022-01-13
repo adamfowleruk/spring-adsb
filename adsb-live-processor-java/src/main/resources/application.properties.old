@@ -1,5 +1,0 @@
-
-spring.cloud.stream.bindings.input.destination=adsb-fan-exchange
-spring.cloud.stream.bindings.input.group=adsbposition.live
-
-management.security.enabled = false
