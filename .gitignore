@@ -266,6 +266,8 @@ paket-files/
 __pycache__/
 *.pyc
 
+.DS_Store
+.project
 
 adsb-console-java/target
 adsb-history-processor-java/target
