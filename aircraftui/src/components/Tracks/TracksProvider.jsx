@@ -78,7 +78,7 @@ class TracksProvider extends Component {
   refreshData() {
     if (!this.state.paused) {
     //console.log("In refresh data");
-    fetch('http://aircraft-monitor-central.cfapps.io/data/aircraft.json',{cache: 'reload'})
+    fetch('https://adsb.shared.12factor.xyz/data/aircraft.json',{cache: 'reload'})
       .then(async (response) => {
         var json = await response.json();
         //console.log("--------------");
