@@ -27,23 +27,35 @@ public class RabbitMQPositionDataService implements PositionDataService {
     Channel channel;
 
     String gsName;
+    String host;
 
     public RabbitMQPositionDataService(String host,String groundStationName) {
         gsName = groundStationName;
         getPositionData(System.currentTimeMillis(), null, null, null);
         tsLastMeasure = System.currentTimeMillis();
 
-      ConnectionFactory factory = new ConnectionFactory();
+        this.host = host;
+
+      ensureChannel();
+
+    }
+
+    private void ensureChannel() {
       try {
-        System.out.println("AMQP URL: " + host);
-        factory.setUri(host);
-        connection = factory.newConnection();
-        channel = connection.createChannel();
-        channel.exchangeDeclare("adsb-fan-exchange","fanout");
+        if (null == connection) {
+          ConnectionFactory factory = new ConnectionFactory();
+
+          System.out.println("AMQP URL: " + host);
+          factory.setUri(host);
+          connection = factory.newConnection();
+        }
+        if (null == channel) {
+          channel = connection.createChannel();
+          channel.exchangeDeclare("adsb-fan-exchange", "fanout");
+        }
       } catch (Exception e) {
         e.printStackTrace();
       }
-
     }
 
     @Override
@@ -66,6 +78,7 @@ public class RabbitMQPositionDataService implements PositionDataService {
         AMQP.BasicProperties.Builder builder = new AMQP.BasicProperties.Builder();
         builder.contentType("application/json");
         AMQP.BasicProperties props = builder.build();
+        ensureChannel();
         channel.basicPublish("adsb-fan-exchange", "", props, json.getBytes("UTF-8")); // any (and all) queue name on this exchange
         System.out.println(" [x] Sent '" + json + "'");
       } catch (Exception e) {
