@@ -2,13 +2,15 @@
 spring:
   cloud:
     stream:
+      rabbit:
+        bindings:
+          input:
+            consumer:
+              exchangeType: fanout
       bindings:
         input:
           destination: adsb-fan-exchange
           group: adsbposition.historical
-          consumer:
-            exchangeType: fanout
-            expires: 10000
   jpa:
     properties:
       hibernate:
