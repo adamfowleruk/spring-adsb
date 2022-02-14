@@ -48,21 +48,29 @@ public class RabbitMQPositionDataService implements PositionDataService {
 
     @Override
     public void positionDataReceived(PositionData positionData) {
-        logPositionDataReceived();
+      if (null == positionData) {
+        System.out.println("positionData itself is null!");
+        return;
+      }
+      logPositionDataReceived();
 
-        try {
-          positionData.setGroundStationName(gsName);
-          ObjectMapper objectMapper = new ObjectMapper();
-          objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
-          String json = objectMapper.writeValueAsString(positionData);
-          AMQP.BasicProperties.Builder builder = new AMQP.BasicProperties.Builder();
-          builder.contentType("application/json");
-          AMQP.BasicProperties props = builder.build();
-          channel.basicPublish("adsb-fan-exchange", "", props, json.getBytes("UTF-8")); // any (and all) queue name on this exchange
-          System.out.println(" [x] Sent '" + json + "'");
-        } catch (Exception e) {
-          e.printStackTrace();
+      try {
+        positionData.setGroundStationName(gsName);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+        String json = objectMapper.writeValueAsString(positionData);
+        if (null == json) {
+          System.out.println("JSON was null for positionData: ID: " + positionData.getFlight() + ", lat: " + positionData.getLat() + ", lon: " + positionData.getLon());
+          return;
         }
+        AMQP.BasicProperties.Builder builder = new AMQP.BasicProperties.Builder();
+        builder.contentType("application/json");
+        AMQP.BasicProperties props = builder.build();
+        channel.basicPublish("adsb-fan-exchange", "", props, json.getBytes("UTF-8")); // any (and all) queue name on this exchange
+        System.out.println(" [x] Sent '" + json + "'");
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
 
     public List<JSONObject> getPositionData(Long minTimestamp, Long maxTimestamp, String objectId, PositionData.ObjectType objectType) {
