@@ -6,6 +6,9 @@ spring:
         input:
           destination: adsb-fan-exchange
           group: adsbposition.live
+          consumer:
+            exchangeType: fanout
+            expires: 10000
   datasource:
     initialization-mode: always
     initialize: true
