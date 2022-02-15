@@ -7,8 +7,8 @@ class About extends React.Component {
     return (
       <Tabs defaultActiveKey='about-app'>
         <Tab eventKey='about-app' title="Uses &amp; Data">
-          <p>The Pivotal Live Situation application provides a single holistic
-            view of data flowing through the Pivotal Platform. It is a Situational Awareness application that provides a single pane of glass to an organisation's users about their geospatial data.
+          <p>The Live Situation application provides a single holistic
+            view of data flowing through the VMware Tanzu Platform. It is a Situational Awareness application that provides a single pane of glass to an organisation's users about their geospatial data.
           </p>
           <p>
             The core of the platform is a messaging layer than can receive any data. Multiple data processors can be installed and configured in order to provide live and historic views of objects and their tracks.
@@ -33,24 +33,19 @@ class About extends React.Component {
         <Tab eventKey='about-software' title="Software used">
           <p>There are various application platform, data platform, and end user software products used in this application.</p>
           <ul>
-            <li>The <a href="https://pivotal.io/" target="_pio">Pivotal Platform</a> is used to host the micro services, web application, and data layers of the application. This provides a consistent platform no matter the infrastructure (private or public cloud) used</li>
-            <li><a href="https://www.rabbitmq.com/" target="_rabbitmq">Pivotal RabbitMQ</a> provides the reliable messaging layer where data is received, transformed, and fused</li>
-            <li><a href="https://pivotal.io/platform/services-marketplace/data-management/redis" target="_redis">Pivotal Redis</a> is used as a 'live view' cache</li>
-            <li><a href="https://pivotal.io/pivotal-greenplum" target="_greenplum">Pivotal Greenplum</a> provides historic vehicle and track recording,searching, and data analysis</li>
-            <li><a href="https://pivotal.io/spring-app-framework" target="_spring">Java Spring Boot</a> and <a href="https://steeltoe.io/" target="_steeltoe">C# .NET Core with Steeltoe</a> versions of each micro service are provided, showcasing the technology neutral platform</li>
-            <li>A static ReactJS application (the one you're reading now!) is hosted by the Pivotal Platform, downloaded to the user's web browser, and then communicates itself directly to the micro services it needs. This is licensed as an Apache 2.0 codebase and <a href="https://github.com/Pivotal-Field-Engineering/spring-adsb" target="_github">can be found on Pivotal's GitHub repository</a></li>
+            <li>The <a href="https://tanzu.vmware.com" target="_pio">VMware Tanzu Platform</a> is used to host the micro services, web application, and data layers of the application. This provides a consistent platform no matter the infrastructure (private or public cloud) used</li>
+            <li><a href="https://www.rabbitmq.com/" target="_rabbitmq">VMware Tanzu RabbitMQ</a> provides the reliable messaging layer where data is received, transformed, and fused</li>
+            <li><a href="https://redis.io" target="_redis">Opensource Redis</a> is used as a 'live view' cache</li>
+            <li><a href="https://tanzu.vmware.com/greenplum" target="_greenplum">VMware Tanzu Greenplum</a> provides historic vehicle and track recording,searching, and data analysis</li>
+            <li><a href="https://tanzu.vmware.com/spring-app-framework" target="_spring">Java Spring Boot</a> and <a href="https://steeltoe.io/" target="_steeltoe">C# .NET Core with Steeltoe</a> versions of each micro service are provided, showcasing the technology neutral platform</li>
+            <li>A static ReactJS application (the one you're reading now!) is hosted by the VMware Tanzu Platform, downloaded to the user's web browser, and then communicates itself directly to the micro services it needs. This is licensed as an Apache 2.0 codebase and <a href="https://github.com/adamfowleruk/spring-adsb" target="_github">can be found on my GitHub repository</a></li>
           </ul>
         </Tab>
         <Tab eventKey='about-links' title="Links">
           <p>Links for the hosted version of this application:-</p>
           <ul>
-            <li><a href="http://adsb.cfapps.io" target="_hosted">Live Situation web application</a> hosted on <a href="https://run.pivotal.io/" target="_pwsinfo">Pivotal Web Services (PWS)</a></li>
-            <li><a href="http://aircraft-monitor-central.cfapps.io/data/aircraft.json" target="_liveview">RESTful data microservice live view JSON</a> hosted on <a href="https://run.pivotal.io/" target="_pwsinfo">Pivotal Web Services (PWS)</a></li>
-            <li><a href="http://aircraft-monitor-central.cfapps.io/" target="_oldapp">Old dump1090 version of this application</a> hosted on <a href="https://run.pivotal.io/" target="_pwsinfo">Pivotal Web Services (PWS)</a></li>
-          </ul>
-          <p>The following demo links will only work for Pivotal Platform Architects:-</p>
-          <ul>
-            <li><a href="https://console.run.pivotal.io/organizations/9be8e148-6ebf-489b-a2b1-dc659df7373f/spaces/859f97f6-3cca-4893-84fc-85106b63c1c4" target="_pws">Application administration space</a> on PWS</li>
+            <li><a href="https://aircraft.shared.12factor.xyz" target="_hosted">Live Situation web application</a> hosted on AWS with the VMware Tanzu Platform</li>
+            <li><a href="https://adsb.shared.12factor.xyz/data/aircraft.json" target="_liveview">RESTful data microservice live view JSON</a> hosted on the VMware Tanzu Platform on AWS</li>
           </ul>
         </Tab>
       </Tabs>

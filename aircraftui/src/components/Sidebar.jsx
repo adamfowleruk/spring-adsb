@@ -72,12 +72,13 @@ class Sidebar extends React.Component {
   render() {
     const { expanded } = this.state;
     var that = this;
+
     const popover = (
       <Popover id="popover-basic" className='about-area'>
-        <Popover.Title as="h3">Application Details</Popover.Title>
-        <Popover.Content>
+        <Popover.Header as="h3">Application Details</Popover.Header>
+        <Popover.Body>
           <About />
-        </Popover.Content>
+        </Popover.Body>
       </Popover>
     );
 
