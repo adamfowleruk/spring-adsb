@@ -12,12 +12,15 @@ spring:
           destination: adsb-fan-exchange
           group: adsbposition.historical
   jpa:
+    hibernate:
+      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         ddl-auto: none
         show-sql: true
   datasource:
+    type: org.apache.tomcat.jdbc.pool.DataSource
     initialization-mode: always
     initialize: true
     continue-on-error: true
