@@ -159,7 +159,7 @@ public class AircraftMonitorApplication {
     JSONObject latestPosition(@PathVariable("craftid") String craftid) {
         LOG.log(Level.WARNING, "Called the latest position method for: " + craftid);
         List<JSONObject> results = jdbcTemplate.query(
-            "select jsondata from geohistory.tracks where craftid=? order by gpsdatetime desc limit 1", 
+            "select jsondata from tracks where craftid=? order by gpsdatetime desc limit 1", 
             new Object[]{craftid},
             (rs, rowNum) -> 
               (JSONObject)JSONValue.parse(new StringReader(rs.getString("jsondata")))
@@ -181,7 +181,7 @@ public class AircraftMonitorApplication {
                 (rs, rowNum) -> (JSONObject) JSONValue.parse(new StringReader(rs.getString("jsondata"))));
                 */
         List<JSONObject> results = jdbcTemplate.query(
-                "select gpsdatetime,lon,lat from geohistory.tracks where craftid=? and gpsdate in (select gpsdate from geohistory.tracks where craftid=? order by gpsdate desc limit 1) order by gpsdatetime desc",
+                "select gpsdatetime,lon,lat from tracks where craftid=? and gpsdate in (select gpsdate from geohistory.tracks where craftid=? order by gpsdate desc limit 1) order by gpsdatetime desc",
                 new Object[] { craftid, craftid },
                 (rs, rowNum) -> {
                     JSONObject jobj = new JSONObject();

@@ -54,7 +54,7 @@ public class HistoryQueueToPostgres {
                 positionData.getLat(),
                 positionData.toString()
                 */
-                    "INSERT INTO geohistory.tracks (craftid,gpsdatetime,gpsdate,lon,lat,jsondata) VALUES (?,?,?,?,?,cast(? as json))",
+                    "INSERT INTO tracks (craftid,gpsdatetime,gpsdate,lon,lat,jsondata) VALUES (?,?,?,?,?,cast(? as json))",
                     positionData.getFlight(), new Timestamp(positionData.getTimestamp()),
                     format.format(new Date(positionData.getTimestamp())), positionData.getLon(), positionData.getLat(),
                     positionData.toString()

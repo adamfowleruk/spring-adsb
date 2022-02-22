@@ -5,11 +5,25 @@ logging:
         web: INFO
 spring:
   jpa:
+    hibernate:
+      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         ddl-auto: none
         show-sql: true
+  datasource:
+    type: org.apache.tomcat.jdbc.pool.DataSource
+    initialization-mode: always
+    initialize: true
+    continue-on-error: true
+  sql:
+    init:
+      mode: always
+      # The above always creates the DB even if not using an embedded db
+      # See schema.sql for details
+      # NOTE: DB needs to be pre-created for postgres jdbc to be able to connect
+      # TODO consider schema-postgres and schema-mysql variants using sql.init.platform=NAME
 
 # From spring boot 2.3+, see: https://hackmd.io/@ryanjbaxter/spring-on-k8s-workshop#Handling-In-Flight-Requests
 server:
