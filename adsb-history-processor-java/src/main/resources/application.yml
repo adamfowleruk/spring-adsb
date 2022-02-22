@@ -21,6 +21,13 @@ spring:
     initialization-mode: always
     initialize: true
     continue-on-error: true
+  sql:
+    init:
+      mode: always
+      # The above always creates the DB even if not using an embedded db
+      # See schema.sql for details
+      # TODO remove explicit DB name from schema.sql and override from POSTGRES_DB env variable dynamically
+      # TODO consider schema-postgres and schema-mysql variants using sql.init.platform=NAME
 
 # From spring boot 2.3+, see: https://hackmd.io/@ryanjbaxter/spring-on-k8s-workshop#Handling-In-Flight-Requests
 server:
@@ -54,8 +61,6 @@ spring:
     url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
     username: ${POSTGRES_USERNAME}
     password: ${POSTGRES_PASSWORD}
-
-# TODO add postgres connection links here
 
 # E.g. may add Kafka instead of RabbitMQ, or Gemfire instead of Redis as other profiles
 
