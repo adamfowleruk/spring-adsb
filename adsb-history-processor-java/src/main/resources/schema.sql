@@ -6,4 +6,4 @@ CREATE TABLE tracks
   lon double precision,
   lat double precision,
   jsondata json
-) DISTRIBUTED RANDOMLY;
+);
