@@ -181,7 +181,7 @@ public class AircraftMonitorApplication {
                 (rs, rowNum) -> (JSONObject) JSONValue.parse(new StringReader(rs.getString("jsondata"))));
                 */
         List<JSONObject> results = jdbcTemplate.query(
-                "select gpsdatetime,lon,lat from tracks where craftid=? and gpsdate in (select gpsdate from geohistory.tracks where craftid=? order by gpsdate desc limit 1) order by gpsdatetime desc",
+                "select gpsdatetime,lon,lat from tracks where craftid=? and gpsdate in (select gpsdate from tracks where craftid=? order by gpsdate desc limit 1) order by gpsdatetime desc",
                 new Object[] { craftid, craftid },
                 (rs, rowNum) -> {
                     JSONObject jobj = new JSONObject();
