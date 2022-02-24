@@ -8,6 +8,7 @@ There are several software products within this code base:-
 - mutability-dump1090 - not included - download from https://github.com/mutability/dump1090 - provides the low level C code for running a Software Defined Radio. This is designed to be ran on a Raspberry Pi, but this version works well on a Mac
 - adsb-console - A standalone Java app, designed to be run on the receiver (Raspberry Pi or Laptop) that sends data to a remote RabbitMQ instance
 - adsb-live-processor - .NET and Spring Boot apps that Listens to a RabbitMQ exchange for new aircraft positions, and updates a Live (60 second TTL) record in Redis per aircraft
+- adsb-history-processor - Spring Boot app that listens to a RabbitMQ exchange for new aircraft positions, and updates a postgres database table
 - aircraft-monitor - .NET and Spring Boot web apps that provides a rest endpoint (/data/aircraft.json) which pulls data from Redis on request, and a web front end (/gmap.html) to show collated aircraft position information
 
 Note two of the apps above are provided with C#.NET and Java Spring Boot varieties to showcase the same patterns being ran with different application runtimes.
