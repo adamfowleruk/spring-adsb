@@ -31,10 +31,10 @@ Visit the https://HOSTNAME/data/aircraft endpoint to see a JSON array (will be e
 
 ## Copyright and Licensing
 
-All code and material is copyright Pivotal Inc all rights reserved, and licensed under the Apache 2 license unless
+All code and material is copyright VMware Inc all rights reserved, and licensed under the Apache 2 license unless
 otherwise stated.
 
-The contents of the src/main/resources/static folder are from the mutability version of the dump1090 application available at https://github.com/mutability/dump1090 and are licensed under the GPL V2 License. These files are copied verbatim and have not been modified.
+The contents of the aircraft-monitor-java/src/main/resources/static folder are from the mutability version of the dump1090 application available at https://github.com/mutability/dump1090 and are licensed under the GPL V2 License. These files are copied verbatim and have not been modified.
 
 ## Support statement
 
@@ -46,4 +46,5 @@ Please use the GitHub issues tracker to log all bugs against this project, and t
 
 ## Author
 
-This app was created by Adam Fowler - afowler at pivotal dot io.
+This app was created by Adam Fowler - adamf at vmware dot com.
+Go code was contributed by Bill Glover - bglover at vmware dot com.
