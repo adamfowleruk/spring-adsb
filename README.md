@@ -5,17 +5,21 @@ in to RabbitMQ for processing, collation, and later central display.
 
 There are several software products within this code base:-
 
-- mutability-dump1090 - not included - download from https://github.com/mutability/dump1090 - provides the low level C code for running a Software Defined Radio. This is designed to be ran on a Raspberry Pi, but this version works well on a Mac
-- adsb-console - A standalone Java app, designed to be run on the receiver (Raspberry Pi or Laptop) that sends data to a remote RabbitMQ instance
+- adsb-console-go - A standalone Go app, designed to be run on the receiver (Raspberry Pi or Laptop) that sends data to a remote RabbitMQ instance
 - adsb-live-processor - .NET and Spring Boot apps that Listens to a RabbitMQ exchange for new aircraft positions, and updates a Live (60 second TTL) record in Redis per aircraft
 - adsb-history-processor - Spring Boot app that listens to a RabbitMQ exchange for new aircraft positions, and updates a postgres database table
 - aircraft-monitor - .NET and Spring Boot web apps that provides a rest endpoint (/data/aircraft.json) which pulls data from Redis on request, and a web front end (/gmap.html) to show collated aircraft position information
+- aircraftui - ReactJS web application with the modern web UI
 
 Note two of the apps above are provided with C#.NET and Java Spring Boot varieties to showcase the same patterns being ran with different application runtimes.
 
+## Live Demo
+
+You can view a live demo of these apps here: https://aircraft.shared.12factor.xyz/
+
 ## How can I add my own data to the global view?
 
-Every Pivot can run their own receiver and contribute to the global map! If you're interested in this, follow the below steps
+Everyone can run their own receiver and contribute to the global map! If you're interested in this, follow the below steps.
 
 First, contact Adam Fowler in the UK Modern Apps SE team <adamf@vmware.com> for a key so you can send data to RabbitMQ.
 
@@ -23,88 +27,9 @@ First, contact Adam Fowler in the UK Modern Apps SE team <adamf@vmware.com> for 
 
 The code you will use requires a specific chipset, so not all DVB-T receivers will work. A good one is the NeoElec R820T2 SDR NESDR Mini 2 which is what I use. This is an inexpensive item that can be found easily online, including from Amazon.
 
-### Install receiver software
+### Install receiver software - NEW APPROACH SINCE 25 Feb 2022
 
-Now, install and compile dump1090:-
-
-```sh
-git clone https://github.com/mutability/dump1090
-mv dump1090 mutability-dump1090
-cd mutability-dump1090
-# Following line is for Raspbian on the Raspberry Pi. Your system may vary
-sudo apt-get install libusb-1.0-0-dev librtlsdr-dev maven
-make
-cd ..
-```
-
-If it fails, read the README in the project's folder for ideas, or get Adam Fowler on a zoom meeting.
-
-Now prepare the data web server:-
-
-```sh
-sudo mkdir /run/dump1090
-sudo chown pi:pi /run/dump1090
-sudo apt-get install lighttpd
-sudo cp lighttpd.conf /etc/lighttpd/
-sudo /etc/init.d/lighttpd restart
-```
-
-Edit your receiver app to put the approximate (not too accurate!) location of your base station. This can be found in the --lon and --lat settings of ./runreceiver.sh
-
-Now plugin your Software Defined Radio stick and run the receiver:-
-
-```sh
-./runreceiver.sh
-```
-
-To test view the internal (your base station only) json view: http://localhost:8081/data/aircraft.json
-
-You should see aircraft information in the console, and in the map view
-
-### Compile and run the Java RabbitMQ app
-
-You now need to compile and run the adsb-console-java project.
-
-```sh
-cd adsb-console-java
-mvn package
-```
-
-Now place the below in the file ./mutability-dump1090/runitmq-configured.sh
-
-```sh
-#!/bin/sh
-export AMQP_URL=amqp://SOMEURL-PROVIDED-BY-ADAMFOWLER
-./runitmq.sh
-```
-
-Edit runitmq.sh to reflect the name of your Base Station. E.g. "Fred's Base Station". Do not put your full name or address.
-
-Now run it :-
-
-```sh
-./mutability-dump1090/runitmq-configured.sh
-```
-
-You should see messages about aircraft appear on the console. Now Ctrl+C to stop this.
-
-### Make this all run on startup
-
-Execute the following commands
-
-```sh
-sudo cp startup.sh /etc/init.d/dump1090
-sudo chown root:root /etc/init.d/dump1090
-sudo chmod gu+x /etc/init.d/dump1090
-sudo ln -s /etc/init.d/dump1090 /etc/rc5.d/
-sudo reboot
-```
-
-Upon restart you should be able to hit the JSON http endpoint again, as well as see all your data on the central map, below.
-
-### View your aircraft online
-
-Your aircraft, along with aircraft from all global receivers, will now be visible on the central map here: http://aircraft-monitor-central.cfapps.io/gmap.html
+See the separate [Ground Station installation guide](adsb-console-go/README.md) on how to install the ground station client.
 
 ### Running live-processor and aircraft-monitor yourself
 
@@ -131,24 +56,35 @@ Still wanna do it? Well...
 The basic outline is:-
 
 1. Each aircraft transmits ADSB messages at varying rates and signal strengths on 1090 MHz. This uses the same transmission tech as Digital TV, allowing it to be receiver by cheap software defined radio TV sticks (ONLY IF their frequency range stretches to 1090 MHz)
-2. A receiver hears the signal, and decodes the raw data, creating a full (including partial messages) output on the console, and exposing a JSON endpoint with the latest data on http://localhost:8081/data/aircraft.json
-3. The adsb-console app reads this local URL once a second. It drops data that has already been sent, and drops partial information data (data without a flight code or longitude and latitude), and sends the remaining data to a RabbitMQ message exchange
+2. A receiver hears the signal, and decodes the raw data, creating a full (including partial messages) output on the console, and exposing a JSON endpoint with the latest data on http://localhost:8081/data/aircraft.json or a local file in /run/dump1090-fa/data/aircraft.json
+3. The adsb-console app reads this local data once a second. It drops data that has already been sent, and drops partial information data (data without a flight code or longitude and latitude), and sends the remaining data to a RabbitMQ message exchange
 4. The adsb-live-processor app instance each listen to the same queue attached to this exchange, ensuring each message is processed only once whilst maintaining HA, and updates the aircraft's live view (a Redis object with the key as the flight code, and value as a JSON object). Each object has a time to live of 60 seconds, so aircraft that land or drop out of range of all receivers will vanish out of Redis after 60 seconds. Hence the name 'live view'.
 5. The aircraft monitor app has a Spring based rest endpoint (at /data/aircraft.json for ease of memory) that scans Redis for all aircraft keys, and produces a combined JSON output
 6. The web page of the aircraft monitoring app (at /gmap.html again for each of memory), queries this JSON endpoint once a second, and displays the global view on a map for you
+7. The adsb-history-processor app also logs all data for each aircraft to a postgres/greenplum database
 
 ## Sub project status
 
-|Processor|Java status|C# status|Notes|
+|Processor|Java status|C# status|Go status|Notes|
 |----|----|----|----|
-adsb-console-java|Working, instance per base station (local)|N/A|Reads ADSB JSON and sends to RabbitMQ
-adsb-live-processor|Working, multi instance|Working, multi instance|Takes live feed and sends to Redis
-aircraft-monitor|Working|Working|Aircraft REST endpoint (and older map display web app)
-aircraftui|N/A|N/A|ReactJS (staticfile buildpack) new demo web UI
+adsb-console-java|RETIRED|N/A|N/A|Please use the go version now
+adsb-console-go|N/A|N/A|Working|NEW! Works well, and has its own packaged installer
+adsb-live-processor|Working, multi instance|Working, multi instance|N/A|Takes live feed and sends to Redis
+adsb-history-processor|Working, multi instance|N/A|N/A|Takes live feed and sends to Postgres/Greenplum for later analysis
+aircraft-monitor|Working|Working|N/A|Aircraft REST endpoints (and older map display web app)
+aircraftui|N/A|N/A|N/A|ReactJS (staticfile buildpack) new demo web UI
+
+## REST API
+
+The aircraft-monitor project exposes three REST API endpoints:-
+
+1. [/data/aircraft.json](https://adsb.shared.12factor.xyz/data/aircraft.json) The 'live view' for all aircraft younger than 60 seconds (This is the only endpoint used in the web UI today)
+2. [/tracks/FLIGHTID/latest](https://adsb.shared.12factor.xyz/tracks/AFL2579/latest) The latest historic position (may be in the distant past) for a given flight
+3. [/tracks/FLIGHTID/today](https://adsb.shared.12factor.xyz/tracks/AFL2579/today) The whole history of points for a given flight in the last 24 hours
 
 ## License and Copyright
 
-All code and material is copyright VMware, Inc 2020-2021 all rights reserved, and licensed under the Apache 2 license unless
+All code and material is copyright VMware, Inc 2020-2022 all rights reserved, and licensed under the Apache-2.0 license unless
 otherwise stated.
 
 aircraft-monitor-java contains the web front end from mutability-dump1090 within its src/main/resources/static folder which is from the mutability version of the dump1090 application available at https://github.com/mutability/dump1090 and are licensed under the GPL V2 License. These files are copied verbatim and have not been modified, except the config.js file which is designed for user editable configuration.
