@@ -1,0 +1,8 @@
+---
+aircraftJSON: /run/dump1090-mutability/aircraft.json
+monitorDuration: 1s
+updateDuration: 5s
+maxAircraftAge: 60s
+amqpURL: "request-this-from-adam"
+amqpExchange: "adsb-fan-exchange"
+stationName: "unnamed-station"
