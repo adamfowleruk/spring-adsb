@@ -1,0 +1,42 @@
+---
+project_name: go-adsb-console
+
+builds:
+- env:
+  - CGO_ENABLED=0
+  goarch:
+  - amd64
+  - arm
+  - arm64
+  goos:
+  - linux
+  - darwin
+  flags:
+  - -trimpath
+  ldflags:
+  - "-s -w -extldflags '-static'"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'
+
+nfpms:
+- id: default
+  file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+  vendor: Bill Glover
+  homepage: https://github.com/billglover/go-adsb-console
+  maintainer: Bill Glover <bglover@pivotal.io>
+  description: Agent to send ADSB updates to RabbitMQ exchange.
+  files:
+    "scripts/etc/systemd/system/*": "/etc/systemd/system"
+  config_files:
+    "config_sample.yaml": "/etc/go-adsb-console/config.yaml"
+  formats:
+  - deb
+  - rpm
+  scripts:
+    postinstall: "scripts/postinstall.sh"
+    preremove: "scripts/preremove.sh"
