@@ -25,18 +25,20 @@ changelog:
 
 nfpms:
 - id: default
-  file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+  file_name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
   vendor: Bill Glover
   homepage: https://github.com/billglover/go-adsb-console
   maintainer: Bill Glover <bglover@pivotal.io>
   description: Agent to send ADSB updates to RabbitMQ exchange.
-  files:
-    "scripts/etc/systemd/system/*": "/etc/systemd/system"
-  config_files:
-    "config_sample.yaml": "/etc/go-adsb-console/config.yaml"
   formats:
   - deb
   - rpm
   scripts:
     postinstall: "scripts/postinstall.sh"
     preremove: "scripts/preremove.sh"
+  contents:
+    - src: scripts/etc/systemd/system/*
+      dst: /etc/systemd/system
+    - src: config_sample.yaml
+      dst: /etc/go-adsb-console/config.yaml
+      type: config|noreplace
